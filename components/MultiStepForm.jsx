@@ -23,7 +23,11 @@ export const MultiStepForm = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(localData));
+    const dataToSave = { ...localData };
+    if (dataToSave.img instanceof File) {
+      dataToSave.img = dataToSave.img.name;
+    }
+    localStorage.setItem("data", JSON.stringify(dataToSave));
   }, [localData]);
 
   const validate = (data) => {
@@ -71,9 +75,10 @@ export const MultiStepForm = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, files } = e.target;
+    const nextValue = type === "file" ? files?.[0] ?? null : value;
 
-    setLocalData((prev) => ({ ...prev, [name]: value }));
+    setLocalData((prev) => ({ ...prev, [name]: nextValue }));
     setErrors((prev) => ({ ...prev, [name]: null }));
   };
 

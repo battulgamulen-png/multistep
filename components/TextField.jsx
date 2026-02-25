@@ -4,13 +4,13 @@ export const TextField = (props) => {
     label,
     type,
     id,
-    value,
     localData,
     name,
     errors,
     title,
-  handleChange
+    handleChange,
   } = props;
+  const isFileInput = type === "file";
 
   return (
     <div>
@@ -22,7 +22,7 @@ export const TextField = (props) => {
       </div>
       <input
         id={id}
-        value={localData?.[name]||""}
+        {...(!isFileInput && { value: localData?.[name] || "" })}
         onChange={handleChange}
         name={name}
         className={
