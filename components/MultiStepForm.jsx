@@ -57,7 +57,7 @@ export const MultiStepForm = () => {
     if (currentIndex === 1) {
       if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
         errors.email = "Please provide a valid email address.";
-      if (!number.match(/^\+?\d{8}$/))
+      if (!number.match(/^\d{8}$/))
         errors.number = "Please enter valid phone number.";
       if (!pass || pass.length < 6)
         errors.pass = "Password must include letters and numbers.";
@@ -76,7 +76,11 @@ export const MultiStepForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    const nextValue = type === "file" ? files?.[0] ?? null : value;
+    let nextValue = type === "file" ? files?.[0] ?? null : value;
+
+    if (name === "number" && typeof nextValue === "string") {
+      nextValue = nextValue.replace(/\D/g, "").slice(0, 8);
+    }
 
     setLocalData((prev) => ({ ...prev, [name]: nextValue }));
     setErrors((prev) => ({ ...prev, [name]: null }));

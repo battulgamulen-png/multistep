@@ -1,10 +1,24 @@
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { TextField } from "./TextField";
 import { AnimatePresence, motion } from "motion/react";
 
 export const StepThree = ({
 handleChange,localData, errors
 }) => {
+  const [previewUrl, setPreviewUrl] = useState("");
+
+  useEffect(() => {
+    if (!(localData?.img instanceof File)) {
+      setPreviewUrl("");
+      return;
+    }
+
+    const url = URL.createObjectURL(localData.img);
+    setPreviewUrl(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [localData?.img]);
+
   return (
     <motion.div
       initial={{ x: 100, opacity: 0 }}
@@ -26,6 +40,7 @@ handleChange,localData, errors
          handleChange={handleChange}
          localData={localData}
          errors={errors}
+          previewUrl={previewUrl}
           title="Choose a video please"
           label="Profile image"
           type="file"
